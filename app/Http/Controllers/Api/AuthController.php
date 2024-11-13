@@ -53,12 +53,14 @@ class AuthController extends Controller
     /**
      * Inscription de l'utilisateur
      *
-     * @return Response
+     * @return JsonResponse
      */
     public function register(RegisterRequest $request): JsonResponse
     {
+
         try {
             $fields = $request->all();
+
             $user = User::create([
                 'name' => $fields['name'],
                 'email' => $fields['email'],
@@ -71,14 +73,16 @@ class AuthController extends Controller
             $token = $user->createToken('authToken', ['*'], now()->addDay())->plainTextToken;
             return response()->json(
                 [
-                    'message' => 'Success login',
+                    'message' => 'User create',
                     'token' => $token
                 ],
-                201,
+                200,
             );
         } catch (Exception $e) {
-            Log::error($e->getMessage(), 'error');
+            Log::error('Erreur dans la construction', 'error');
+            return response()->json(['message' => $e->getMessage()]);
         }
+        // return response()->json(['message' => 'Voici le premier test', 'data' => $data]);
     }
 
 
