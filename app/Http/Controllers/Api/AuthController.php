@@ -59,7 +59,9 @@ class AuthController extends Controller
     {
 
         try {
+
             $fields = $request->all();
+
 
             $user = User::create([
                 'name' => $fields['name'],
@@ -67,8 +69,9 @@ class AuthController extends Controller
                 'password' => $fields['password'],
             ]);
 
+
             if (!$user)
-                throw new Exception('Imposssible de créer un utilisateur', 401);
+                throw new Exception('Imposssible de créer un utilisateur');
 
             $token = $user->createToken('authToken', ['*'], now()->addDay())->plainTextToken;
             return response()->json(
@@ -79,7 +82,8 @@ class AuthController extends Controller
                 200,
             );
         } catch (Exception $e) {
-            Log::error('Erreur dans la construction', 'error');
+            Log::error('Erreur dans la construction');
+            Log::error($e->getTraceAsString());
             return response()->json(['message' => $e->getMessage()]);
         }
         // return response()->json(['message' => 'Voici le premier test', 'data' => $data]);
