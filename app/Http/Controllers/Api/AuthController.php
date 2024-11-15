@@ -62,16 +62,11 @@ class AuthController extends Controller
 
             $fields = $request->all();
 
-
             $user = User::create([
                 'name' => $fields['name'],
                 'email' => $fields['email'],
                 'password' => $fields['password'],
             ]);
-
-
-            if (!$user)
-                throw new Exception('Imposssible de créer un utilisateur');
 
             $token = $user->createToken('authToken', ['*'], now()->addDay())->plainTextToken;
             return response()->json(
@@ -84,9 +79,8 @@ class AuthController extends Controller
         } catch (Exception $e) {
             Log::error('Erreur dans la construction');
             Log::error($e->getTraceAsString());
-            return response()->json(['message' => $e->getMessage()]);
+            return response()->json(['message' => $e->getMessage()], 422);
         }
-        // return response()->json(['message' => 'Voici le premier test', 'data' => $data]);
     }
 
 

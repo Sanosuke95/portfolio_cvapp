@@ -23,8 +23,21 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|min:4',
-            'email' => 'required|email',
+            'email' => 'required|unique:users,email',
             'password' => 'required',
+        ];
+    }
+
+    /**
+     * Messages for validation
+     */
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'This name is required.',
+            'name.min' => 'This name is too short.',
+            'email.required' => 'This email is required.',
+            'email.unique' => 'This email is already used'
         ];
     }
 }
