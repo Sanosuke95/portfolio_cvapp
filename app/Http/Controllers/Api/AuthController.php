@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\PersonalAccessToken;
 
-class AuthController extends Controller
+class AuthController extends BaseController
 {
 
     /**
@@ -27,31 +27,24 @@ class AuthController extends Controller
         // Récupération des champs du login
         $credentials = $request->all();
 
+        Log::info('Check if credentials is good');
         if (Auth::attempt($credentials)) {
+            $data = [];
             /**
              * @var  User
              */
             $user = Auth::user();
             $token = $user->createToken('authToken', ['*'], now()->addDay())->plainTextToken;
+            $data['token'] = $token;
 
             // Recupération du acces token
             $personal_access_token = PersonalAccessToken::findToken($token);
-            Log::info($personal_access_token->expires_at);
-            return response()->json(
-                [
-                    'message' => 'Success login',
-                    'token' => $token,
-                    'expires_at' => $personal_access_token->expires_at
-                ],
-                ResponseCodeHttp::SUCCES_LOGIN,
-            );
+            $data['expires_at'] = date_format($personal_access_token->expires_at, 'Y-m-d H:i:s');
+            Log::info('User success login');
+            return $this->sendResponse($data, 'Success login');
         } else {
-            return response()->json(
-                [
-                    'message' => 'Authenticated failed'
-                ],
-                ResponseCodeHttp::ERROR_REGISTER
-            );
+            Log::error('Authenticated failed');
+            return $this->sendError('Authenticated failed', ResponseCodeHttp::ERROR_LOGIN);
         }
     }
 
@@ -64,8 +57,10 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
 
+        Log::info('Begin user creation');
         try {
 
+            $data = [];
             $fields = $request->all();
 
             $user = User::create([
@@ -73,19 +68,20 @@ class AuthController extends Controller
                 'email' => $fields['email'],
                 'password' => $fields['password'],
             ]);
+            Log::info("User create");
 
             $token = $user->createToken('authToken', ['*'], now()->addDay())->plainTextToken;
-            return response()->json(
-                [
-                    'message' => 'User create',
-                    'token' => $token
-                ],
-                ResponseCodeHttp::SUCCES_LOGIN,
-            );
+            $data['token'] = $token;
+
+            // Récupération du token
+            $personal_access_token = PersonalAccessToken::findToken($token);
+            $data['expires_at'] = date_format($personal_access_token->expires_at, 'Y-m-d H:i:s');
+            Log::info('User logged in');
+
+            return $this->sendResponse($data, 'User create.');
         } catch (Exception $e) {
-            Log::error('Erreur dans la construction');
-            Log::error($e->getTraceAsString());
-            return response()->json(['message' => $e->getMessage()], ResponseCodeHttp::ERROR_REGISTER);
+            Log::error($e->getMessage());
+            return $this->sendError($e->getMessage(), ResponseCodeHttp::ERROR_REGISTER);
         }
     }
 

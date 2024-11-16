@@ -8,8 +8,8 @@ namespace App\Enum;
 
 enum ResponseCodeHttp: int
 {
-    case SUCCES_LOGIN = 200;
+    case SUCCESS = 200;
+    case NOT_FOUND = 404;
     case ERROR_LOGIN = 401;
-    case SUCCES_REGISTER = 200;
     case ERROR_REGISTER = 422;
 }
