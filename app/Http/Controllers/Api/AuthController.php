@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enum\ResponseCodeHttp;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -42,14 +43,14 @@ class AuthController extends Controller
                     'token' => $token,
                     'expires_at' => $personal_access_token->expires_at
                 ],
-                200,
+                ResponseCodeHttp::SUCCES_LOGIN,
             );
         } else {
             return response()->json(
                 [
                     'message' => 'Authenticated failed'
                 ],
-                401
+                ResponseCodeHttp::ERROR_REGISTER
             );
         }
     }
@@ -79,12 +80,12 @@ class AuthController extends Controller
                     'message' => 'User create',
                     'token' => $token
                 ],
-                200,
+                ResponseCodeHttp::SUCCES_LOGIN,
             );
         } catch (Exception $e) {
             Log::error('Erreur dans la construction');
             Log::error($e->getTraceAsString());
-            return response()->json(['message' => $e->getMessage()], 422);
+            return response()->json(['message' => $e->getMessage()], ResponseCodeHttp::ERROR_REGISTER);
         }
     }
 
