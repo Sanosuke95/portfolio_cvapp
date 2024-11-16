@@ -9,6 +9,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -85,12 +86,42 @@ class AuthController extends BaseController
         }
     }
 
+    /**
+     * Return user data
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function profile(Request $request)
+    {
+        $data['info'] = $request->user();
+        Log::info('User info');
+        return $this->sendResponse($data, 'User info');
+    }
 
     /**
-     * Remove the specified resource from storage.
+     * Logout user
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function destroy(User $user)
+    public function logout(Request $request): JsonResponse
     {
-        //
+        $request->user()->currentAccessToken()->delete();
+        Log::info('Log out');
+        return $this->sendResponse([], 'Log out');
+    }
+
+    /**
+     * Destroy user
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function destroy(Request $request): JsonResponse
+    {
+        $request->user()->currentAccessToken()->delete();
+        $request->user()->delete();
+        return $this->sendResponse([], 'User detroy');
     }
 }
