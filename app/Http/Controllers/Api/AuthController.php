@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -31,11 +32,15 @@ class AuthController extends Controller
              */
             $user = Auth::user();
             $token = $user->createToken('authToken', ['*'], now()->addDay())->plainTextToken;
-            var_dump(now()->addDay());
+
+            // Recupération du acces token
+            $personal_access_token = PersonalAccessToken::findToken($token);
+            Log::info($personal_access_token->expires_at);
             return response()->json(
                 [
                     'message' => 'Success login',
-                    'token' => $token
+                    'token' => $token,
+                    'expires_at' => $personal_access_token->expires_at
                 ],
                 200,
             );
