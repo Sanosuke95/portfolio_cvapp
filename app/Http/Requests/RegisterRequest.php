@@ -23,13 +23,13 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|min:4',
-            'email' => 'required|unique:users,email',
+            'email' => 'required|unique:users,email|email',
             'password' => 'required',
         ];
     }
 
     /**
-     * Messages for validation
+     * Validation messages
      */
     public function messages(): array
     {
@@ -37,7 +37,9 @@ class RegisterRequest extends FormRequest
             'name.required' => 'This name is required.',
             'name.min' => 'This name is too short.',
             'email.required' => 'This email is required.',
-            'email.unique' => 'This email is already used'
+            'email.unique' => 'This email is already used',
+            'email.email' => 'This is not valid email adrress',
+            'password.required' => 'The password is required'
         ];
     }
 }
