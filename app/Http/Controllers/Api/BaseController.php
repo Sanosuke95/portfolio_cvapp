@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api;
 use App\Enum\ResponseCodeHttp;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class BaseController extends Controller
 {
@@ -18,11 +19,11 @@ class BaseController extends Controller
      * Send success response
      * 
      * @param string $message
-     * @param array $data
+     * @param array|JsonResource $data
      * 
      * @return JsonResponse
      */
-    public function sendResponse(array $data, string $message): JsonResponse
+    public function sendResponse(array|JsonResource $data, string $message): JsonResponse
     {
         return response()->json(
             [

@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
 use App\Http\Requests\StoreContactRequest;
-use App\Http\Requests\UpdateContactRequest;
+use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ContactController extends BaseController
 {
@@ -19,8 +20,8 @@ class ContactController extends BaseController
      */
     public function index(): JsonResponse
     {
-        $contacts = Contact::all();
-        return response()->json(['data' => $contacts]);
+        $contacts = ContactResource::collection(Contact::all())->resolve();
+        return $this->sendResponse($contacts, 'Contact list');
     }
 
     /**
@@ -28,23 +29,20 @@ class ContactController extends BaseController
      */
     public function store(StoreContactRequest $request)
     {
-        Log::info('Debut insertion des données');
+        Log::info('Begin');
         try {
-            $contact = new Contact();
-            $contact->email = $request->email;
-            $contact->uuid = $contact->newUUID();
-            $contact->subject = $request->subject;
-            $contact->content = $request->content;
 
+            $contact = new Contact($request->all());
+
+            // Add uuid
+            $contact->uuid = Str::uuid();
+
+            Log::info('Save all data');
             $contact->save();
-            // $contact = Contact::create([
-            //     'email' => $fields['email'],
-            //     'subject' => $fields['subject'],
-            //     'content' => $fields['content']
-            // ]);
 
             // return $this->sendResponse($contact, 'Contact created');
-            return response()->json(['data' => $contact]);
+            $result = new ContactResource($contact);
+            return $this->sendResponse($result, 'Contact created');
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
             Log::error($msg);
