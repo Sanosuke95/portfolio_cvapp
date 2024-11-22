@@ -3,17 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Str;
 
 class Contact extends Model
 {
-    /**
-     * Generate uuid
-     */
-    public function newUUID()
-    {
-        return Uuid::uuid4();
-    }
+
 
     /**
      * The all fields for the model
@@ -25,4 +19,26 @@ class Contact extends Model
         'subject',
         'content'
     ];
+
+    /**
+     * Boot helper
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->uuid = Str::uuid();
+        });
+    }
+
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
 }

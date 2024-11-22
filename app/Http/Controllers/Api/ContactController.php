@@ -34,14 +34,11 @@ class ContactController extends BaseController
 
             $contact = new Contact($request->all());
 
-            // Add uuid
-            $contact->uuid = Str::uuid();
-
             Log::info('Save all data');
             $contact->save();
 
-            // return $this->sendResponse($contact, 'Contact created');
             $result = new ContactResource($contact);
+            Log::info('Data save');
             return $this->sendResponse($result, 'Contact created');
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
@@ -55,15 +52,17 @@ class ContactController extends BaseController
      */
     public function show(Contact $contact)
     {
-        //
+        $result = new ContactResource($contact);
+        return $this->sendResponse($result, 'Element');
     }
 
 
     /**
-     * Remove the specified resource from storage.
+     * Delete method.
      */
     public function destroy(Contact $contact)
     {
-        //
+        $contact->delete();
+        return $this->sendResponse([], 'Message deleted');
     }
 }
