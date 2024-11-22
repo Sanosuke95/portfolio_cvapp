@@ -5,7 +5,7 @@
  * Class pour les fonctions reutilisable
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
 use App\Http\Controllers\Controller;
