@@ -38,7 +38,7 @@ class ContactController extends BaseController
             $contact->save();
 
             $result = new ContactResource($contact);
-            Log::info('Data save');
+            Log::info('Data create');
             return $this->sendResponse($result, 'Contact created');
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
@@ -48,10 +48,11 @@ class ContactController extends BaseController
     }
 
     /**
-     * Display the specified resource.
+     * Show method
      */
     public function show(Contact $contact)
     {
+        Log::info('Get element id : ' . $contact->id);
         $result = new ContactResource($contact);
         return $this->sendResponse($result, 'Element');
     }
@@ -62,7 +63,8 @@ class ContactController extends BaseController
      */
     public function destroy(Contact $contact)
     {
+        Log::info('Delete element id: ' . $contact->id);
         $contact->delete();
-        return $this->sendResponse([], 'Message deleted');
+        return $this->sendResponse([], 'Element deleted');
     }
 }
