@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
-use App\Http\Controllers\BaseController;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
