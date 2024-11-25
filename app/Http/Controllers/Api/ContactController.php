@@ -9,7 +9,6 @@ use App\Models\Contact;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class ContactController extends BaseController
 {
