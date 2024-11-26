@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 class Contact extends Model
 {
 
-
     /**
      * The all fields for the model
      * 

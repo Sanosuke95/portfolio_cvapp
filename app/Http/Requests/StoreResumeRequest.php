@@ -11,7 +11,7 @@ class StoreResumeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,19 @@ class StoreResumeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'required|min:4'
+        ];
+    }
+
+    /**
+     * All message for error
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'The title is required'
         ];
     }
 }
