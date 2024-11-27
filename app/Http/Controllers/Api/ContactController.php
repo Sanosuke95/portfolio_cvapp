@@ -19,8 +19,9 @@ class ContactController extends BaseController
      */
     public function index(): JsonResponse
     {
-        $contacts = ContactResource::collection(Contact::all())->resolve();
-        return $this->sendResponse($contacts, 'Contact list');
+        $contacts = Contact::all();
+        $result = ContactResource::collection($contacts)->resolve();
+        return $this->sendResponse($result, 'Contact list');
     }
 
     /**
@@ -48,6 +49,8 @@ class ContactController extends BaseController
 
     /**
      * Show method
+     * 
+     * @param Contact $contact
      */
     public function show(Contact $contact)
     {

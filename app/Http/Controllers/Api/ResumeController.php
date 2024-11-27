@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Enum\ResponseCodeHttp;
+use App\Enum\Step;
 use App\Http\Requests\StoreResumeRequest;
 use App\Http\Requests\UpdateResumeRequest;
 use App\Http\Resources\ResumeResource;
@@ -36,30 +37,52 @@ class ResumeController extends BaseController
      */
     public function index(): JsonResponse
     {
-        $resume = Resume::all()->where('user_id', '=', $this->user->id);
-        $result = new ResumeResource($resume);
-        return $this->sendResponse($this->user->id, 'Resume list');
+        $resumes = Resume::all()->where('user_id', '=', $this->user->id);
+        $result = ResumeResource::collection($resumes)->resolve();
+        return $this->sendResponse($result, 'List resume');
     }
 
     /**
      * Store a newly created resource in storage.
+     * 
+     * @return JsonResponse
      */
-    public function store(StoreResumeRequest $request)
+    public function store(StoreResumeRequest $request): JsonResponse
     {
 
         Log::info("Begin insert");
         try {
             $resume = new Resume($request->all());
+            $resume->user_id = $this->user->id;
+            $resume->completed = false;
+
+            if (is_null($resume->step))
+                $resume->step = Step::STEP_SKILLS->value;
+
+            Log::info('Insert data');
+            $resume->save();
+
+            $result = new ResumeResource($resume);
+            return $this->sendResponse($result, 'Resume created');
         } catch (Exception $e) {
+            $msg = 'Error in insert: ' . $e->getMessage();
+            Log::error($msg);
+            return $this->sendError($msg, ResponseCodeHttp::ERROR_REGISTER);
         }
     }
 
     /**
      * Display the specified resource.
+     * 
+     * @param Resume $resume
+     * 
+     * @return JsonResponse
      */
-    public function show(Resume $resume)
+    public function show(Resume $resume): JsonResponse
     {
-        //
+        Log::info('Get element id : ' . $resume->id);
+        $result = new ResumeResource($resume);
+        return $this->sendResponse($result, 'Element recept');
     }
 
     /**
@@ -67,7 +90,9 @@ class ResumeController extends BaseController
      */
     public function update(UpdateResumeRequest $request, Resume $resume)
     {
-        //
+        try {
+        } catch (Exception $e) {
+        }
     }
 
     /**
