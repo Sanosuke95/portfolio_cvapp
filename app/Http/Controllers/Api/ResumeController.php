@@ -15,19 +15,22 @@ use Illuminate\Support\Facades\Log;
 
 class ResumeController extends BaseController
 {
+
     /**
      * get current user
      * 
      * @var object
      */
-    protected $user;
+    protected object $user;
 
     /**
      * Constructor 
      */
     public function __construct()
     {
-        $this->user = Auth::user();
+        $this->user = $this->getCurrentUser();
+        Log::info($this->user);
+        die();
     }
 
     /**
@@ -37,9 +40,15 @@ class ResumeController extends BaseController
      */
     public function index(): JsonResponse
     {
-        $resumes = Resume::all()->where('user_id', '=', $this->user->id);
-        $result = ResumeResource::collection($resumes)->resolve();
-        return $this->sendResponse($result, 'List resume');
+        try {
+            $resumes = Resume::all()->where('user_id', '=', $this->user->id);
+            $result = ResumeResource::collection($resumes)->resolve();
+            return $this->sendResponse($result, 'List resume');
+        } catch (Exception $e) {
+            $msg = 'Error in insert: ' . $e->getMessage();
+            Log::error($msg);
+            return $this->sendError($msg, ResponseCodeHttp::ERROR_REGISTER);
+        }
     }
 
     /**
@@ -91,7 +100,13 @@ class ResumeController extends BaseController
     public function update(UpdateResumeRequest $request, Resume $resume)
     {
         try {
+            $resume->update($request->all());
+            $result = new ResumeResource($resume);
+            return $this->sendResponse($result, 'Resume update');
         } catch (Exception $e) {
+            $msg = 'Error in insert: ' . $e->getMessage();
+            Log::error($msg);
+            return $this->sendError($msg, ResponseCodeHttp::ERROR_REGISTER);
         }
     }
 

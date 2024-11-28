@@ -9,9 +9,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
 use App\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\Model;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 class BaseController extends Controller
 {
@@ -51,5 +54,23 @@ class BaseController extends Controller
             'message' => $message,
             'code' => $code->value
         ]);
+    }
+
+
+    /**
+     * Get current user 
+     *
+     * @return void
+     */
+    public function getCurrentUser()
+    {
+        $user = Auth::user();
+        if (!$user) {
+            Log::error('User uauthenticated');
+            throw new Exception('User unauthenticated');
+        } else {
+            Log::info('User connecté');
+            return $user;
+        }
     }
 }
