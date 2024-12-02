@@ -55,22 +55,4 @@ class BaseController extends Controller
             'code' => $code->value
         ]);
     }
-
-
-    /**
-     * Get current user 
-     *
-     * @return void
-     */
-    public function getCurrentUser()
-    {
-        $user = Auth::user();
-        if (!$user) {
-            Log::error('User uauthenticated');
-            throw new Exception('User unauthenticated');
-        } else {
-            Log::info('User connecté');
-            return $user;
-        }
-    }
 }

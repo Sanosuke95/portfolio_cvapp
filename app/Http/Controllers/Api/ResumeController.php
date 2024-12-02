@@ -28,9 +28,7 @@ class ResumeController extends BaseController
      */
     public function __construct()
     {
-        $this->user = $this->getCurrentUser();
-        Log::info($this->user);
-        die();
+        $this->user = Auth::user();
     }
 
     /**
@@ -45,7 +43,7 @@ class ResumeController extends BaseController
             $result = ResumeResource::collection($resumes)->resolve();
             return $this->sendResponse($result, 'List resume');
         } catch (Exception $e) {
-            $msg = 'Error in insert: ' . $e->getMessage();
+            $msg = 'Error get all resumes : ' . $e->getMessage();
             Log::error($msg);
             return $this->sendError($msg, ResponseCodeHttp::ERROR_REGISTER);
         }
