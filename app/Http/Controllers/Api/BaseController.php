@@ -12,8 +12,6 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 
 class BaseController extends Controller
