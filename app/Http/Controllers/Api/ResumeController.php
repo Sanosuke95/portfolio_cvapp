@@ -94,8 +94,13 @@ class ResumeController extends BaseController
 
     /**
      * Update the specified resource in storage.
+     * 
+     * @param UpdateResumeRequest $request
+     * @param Resume $resume
+     * 
+     * @return JsonResponse
      */
-    public function update(UpdateResumeRequest $request, Resume $resume)
+    public function update(UpdateResumeRequest $request, Resume $resume): JsonResponse
     {
         try {
             $resume->update($request->all());
@@ -110,9 +115,14 @@ class ResumeController extends BaseController
 
     /**
      * Remove the specified resource from storage.
+     * 
+     * @param Resume $resume
+     * 
+     * @return JsonResponse
      */
-    public function destroy(Resume $resume)
+    public function destroy(Resume $resume): JsonResponse
     {
-        //
+        $resume->delete();
+        return $this->sendResponse([], 'Element delete');
     }
 }
