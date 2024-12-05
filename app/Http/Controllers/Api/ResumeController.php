@@ -81,13 +81,14 @@ class ResumeController extends BaseController
     /**
      * Display the specified resource.
      * 
-     * @param Resume $resume
+     * @param string $uuid
      * 
      * @return JsonResponse
      */
-    public function show(Resume $resume): JsonResponse
+    public function show(string $uuid): JsonResponse
     {
-        Log::info('Get element id : ' . $resume->id);
+        $resume = Resume::where('uuid', '=', $uuid)->firstOrFail();
+        Log::info($resume);
         $result = new ResumeResource($resume);
         return $this->sendResponse($result, 'Element recept');
     }
@@ -116,12 +117,13 @@ class ResumeController extends BaseController
     /**
      * Remove the specified resource from storage.
      * 
-     * @param Resume $resume
+     * @param string $uuid
      * 
      * @return JsonResponse
      */
-    public function destroy(Resume $resume): JsonResponse
+    public function destroy(string $uuid): JsonResponse
     {
+        $resume = Resume::where('uuid', '=', $uuid)->firstOrFail();
         $resume->delete();
         return $this->sendResponse([], 'Element delete');
     }
