@@ -124,7 +124,7 @@ class ResumeController extends BaseController
      */
     public function destroy(string $uuid): JsonResponse
     {
-        $resume = Resume::where('uuid', $uuid)->get();
+        $resume = Resume::where('uuid', $uuid)->first();
         if (empty($resume))
             return $this->sendError('Element not found', ResponseCodeHttp::NOT_FOUND);
         $resume->delete();
