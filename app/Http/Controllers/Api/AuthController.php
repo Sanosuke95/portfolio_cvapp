@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enum\ResponseCodeHttp;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -61,17 +62,14 @@ class AuthController extends BaseController
         try {
 
             $data = [];
-            $fields = $request->all();
-
-            $user = User::create([
-                'name' => $fields['name'],
-                'email' => $fields['email'],
-                'password' => $fields['password'],
-            ]);
+            $user = new User($request->all());
+            $user->save();
             Log::info("User create");
 
             $token = $user->createToken('authToken', ['*'], now()->addDay())->plainTextToken;
             $data['token'] = $token;
+            Log::info($data);
+            die();
 
             // Récupération du token
             $personal_access_token = PersonalAccessToken::findToken($token);
@@ -93,9 +91,9 @@ class AuthController extends BaseController
      */
     public function profile(Request $request)
     {
-        $data['info'] = $request->user();
+        $user = new UserResource($request->user());
         Log::info('User info');
-        return $this->sendResponse($data, 'User info');
+        return $this->sendResponse($user, 'User info');
     }
 
     /**

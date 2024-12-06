@@ -9,9 +9,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
 use App\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\Model;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+
 
 class BaseController extends Controller
 {

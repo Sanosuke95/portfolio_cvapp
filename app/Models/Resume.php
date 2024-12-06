@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Contact extends Model
+class Resume extends Model
 {
 
     /**
      * The all fields for the model
-     * 
+     *
      * @var array<int, string>
      */
     protected $fillable = [
-        'email',
-        'subject',
-        'content'
+        'title',
+        'description'
     ];
 
     /**
