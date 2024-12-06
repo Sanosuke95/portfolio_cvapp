@@ -87,8 +87,9 @@ class ResumeController extends BaseController
      */
     public function show(string $uuid): JsonResponse
     {
-        $resume = Resume::where('uuid', '=', $uuid)->firstOrFail();
-        Log::info($resume);
+        $resume = Resume::where('uuid', $uuid)->first();
+        if (empty($resume))
+            return $this->sendError('Element not found', ResponseCodeHttp::NOT_FOUND);
         $result = new ResumeResource($resume);
         return $this->sendResponse($result, 'Element recept');
     }
@@ -123,7 +124,9 @@ class ResumeController extends BaseController
      */
     public function destroy(string $uuid): JsonResponse
     {
-        $resume = Resume::where('uuid', '=', $uuid)->firstOrFail();
+        $resume = Resume::where('uuid', $uuid)->get();
+        if (empty($resume))
+            return $this->sendError('Element not found', ResponseCodeHttp::NOT_FOUND);
         $resume->delete();
         return $this->sendResponse([], 'Element delete');
     }
