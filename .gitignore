@@ -13,6 +13,9 @@ Homestead.yaml
 auth.json
 npm-debug.log
 yarn-error.log
+composer.lock
+package-lock.json
+yarn.lock
 /.zed
 
 ### Laravel ###
@@ -20,6 +23,8 @@ yarn-error.log
 node_modules/
 npm-debug.log
 yarn-error.log
+_ide_helper_models.php
+_ide_helper.php
 
 storage/*.key
 storage/pail

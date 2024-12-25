@@ -21,7 +21,7 @@ class ContactController extends BaseController
     {
         $contacts = Contact::all();
         $result = ContactResource::collection($contacts)->resolve();
-        return $this->sendResponse($result, 'Contact list');
+        return $this->jsonResponseSuccess($result, 'Contact list');
     }
 
     /**
@@ -39,11 +39,11 @@ class ContactController extends BaseController
 
             $result = new ContactResource($contact);
             Log::info('Data create');
-            return $this->sendResponse($result, 'Contact created');
+            return $this->jsonResponseSuccess($result, 'Contact created');
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
             Log::error($msg);
-            return $this->sendError($msg, ResponseCodeHttp::ERROR_REGISTER);
+            return $this->jsonResponseError($msg, ResponseCodeHttp::ERROR_REGISTER);
         }
     }
 
@@ -56,7 +56,7 @@ class ContactController extends BaseController
     {
         Log::info('Get element id : ' . $contact->id);
         $result = new ContactResource($contact);
-        return $this->sendResponse($result, 'Element');
+        return $this->jsonResponseSuccess($result, 'Element');
     }
 
 
@@ -67,6 +67,6 @@ class ContactController extends BaseController
     {
         Log::info('Delete element id: ' . $contact->id);
         $contact->delete();
-        return $this->sendResponse([], 'Element deleted');
+        return $this->jsonResponseSuccess([], 'Element deleted');
     }
 }

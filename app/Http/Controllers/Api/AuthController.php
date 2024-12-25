@@ -42,10 +42,10 @@ class AuthController extends BaseController
             $personal_access_token = PersonalAccessToken::findToken($token);
             $data['expires_at'] = date_format($personal_access_token->expires_at, 'Y-m-d H:i:s');
             Log::info('User success login');
-            return $this->sendResponse($data, 'Success login');
+            return $this->jsonResponseSuccess('Success login', $data);
         } else {
             Log::error('Authenticated failed');
-            return $this->sendError('Authenticated failed', ResponseCodeHttp::ERROR_LOGIN);
+            return $this->jsonResponseError('Authenticated failed', ResponseCodeHttp::ERROR_LOGIN);
         }
     }
 
@@ -68,18 +68,16 @@ class AuthController extends BaseController
 
             $token = $user->createToken('authToken', ['*'], now()->addDay())->plainTextToken;
             $data['token'] = $token;
-            Log::info($data);
-            die();
 
             // Récupération du token
             $personal_access_token = PersonalAccessToken::findToken($token);
             $data['expires_at'] = date_format($personal_access_token->expires_at, 'Y-m-d H:i:s');
             Log::info('User logged in');
 
-            return $this->sendResponse($data, 'User create.');
+            return $this->jsonResponseSuccess('User create.', $data);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return $this->sendError($e->getMessage(), ResponseCodeHttp::ERROR_REGISTER);
+            return $this->jsonResponseError($e->getMessage(), ResponseCodeHttp::ERROR_REGISTER);
         }
     }
 
@@ -93,7 +91,7 @@ class AuthController extends BaseController
     {
         $user = new UserResource($request->user());
         Log::info('User info');
-        return $this->sendResponse($user, 'User info');
+        return $this->jsonResponseSuccess('User info', $user);
     }
 
     /**
@@ -106,7 +104,7 @@ class AuthController extends BaseController
     {
         $request->user()->currentAccessToken()->delete();
         Log::info('Log out');
-        return $this->sendResponse([], 'Log out');
+        return $this->jsonResponseSuccess('Log out');
     }
 
     /**
@@ -119,6 +117,6 @@ class AuthController extends BaseController
     {
         $request->user()->currentAccessToken()->delete();
         $request->user()->delete();
-        return $this->sendResponse([], 'User detroy');
+        return $this->jsonResponseSuccess('User detroy');
     }
 }

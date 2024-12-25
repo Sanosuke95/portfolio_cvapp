@@ -3,8 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
+/**
+ * @mixin IdeHelperResume
+ */
 class Resume extends Model
 {
 
@@ -38,5 +43,24 @@ class Resume extends Model
     public function getRouteKeyName(): string
     {
         return 'uuid';
+    }
+
+
+    /**
+     * Get the user realtion
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'foreign_key', 'user_id');
+    }
+
+    /**
+     * Relation by skill
+     *
+     * @return HasMany
+     */
+    public function skills(): HasMany
+    {
+        return $this->hasMany(Skill::class);
     }
 }
