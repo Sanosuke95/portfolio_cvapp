@@ -3,23 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 /**
- * @mixin IdeHelperContact
+ * @mixin IdeHelperSkill
  */
-class Contact extends Model
+class Skill extends Model
 {
-
     /**
      * The all fields for the model
-     * 
+     *
      * @var array<int, string>
      */
     protected $fillable = [
-        'email',
-        'subject',
-        'content'
+        'name',
+        'level'
     ];
 
     /**
@@ -36,11 +35,29 @@ class Contact extends Model
         });
     }
 
+
     /**
      * Get the route key for the model.
      */
     public function getRouteKeyName(): string
     {
         return 'uuid';
+    }
+
+    /**
+     * Get user parent
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'foreign_key', 'user_id');
+    }
+
+
+    /**
+     * Get resume parent for own skill
+     */
+    public function resume(): BelongsTo
+    {
+        return $this->belongsTo(Resume::class, 'foreign_key', 'resume_id');
     }
 }

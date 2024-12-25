@@ -25,16 +25,12 @@ class BaseController extends Controller
      * 
      * @return JsonResponse
      */
-    public function sendResponse(array|JsonResource $data, string $message): JsonResponse
+    public function jsonResponseSuccess(string $message, array|JsonResource $data = []): JsonResponse
     {
-        return response()->json(
-            [
-                'success' => true,
-                'data' => $data,
-                'message' => $message
-            ],
-            ResponseCodeHttp::SUCCESS->value
-        );
+        $response = ['success' => true, 'message' => $message];
+        if (!empty($data))
+            $response['data'] = $data;
+        return response()->json($response, ResponseCodeHttp::SUCCESS->value);
     }
 
     /**
@@ -45,12 +41,13 @@ class BaseController extends Controller
      * 
      * @return JsonResponse
      */
-    public function sendError(string $message, ResponseCodeHttp $code = ResponseCodeHttp::NOT_FOUND)
+    public function jsonResponseError(string $message, ResponseCodeHttp $code = ResponseCodeHttp::NOT_FOUND)
     {
-        return response()->json([
+        $response = [
             'success' => false,
             'message' => $message,
             'code' => $code->value
-        ]);
+        ];
+        return response()->json($response);
     }
 }

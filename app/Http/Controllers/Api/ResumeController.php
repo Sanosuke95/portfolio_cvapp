@@ -8,6 +8,7 @@ use App\Http\Requests\StoreResumeRequest;
 use App\Http\Requests\UpdateResumeRequest;
 use App\Http\Resources\ResumeResource;
 use App\Models\Resume;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -39,13 +40,12 @@ class ResumeController extends BaseController
     public function index(): JsonResponse
     {
         try {
-            $resumes = Resume::all()->where('user_id', '=', $this->user->id);
-            $result = ResumeResource::collection($resumes)->resolve();
-            return $this->sendResponse($result, 'List resume');
+            $resumes = ResumeResource::collection($this->user->resumes)->resolve();
+            return $this->jsonResponseSuccess('List resume', $resumes);
         } catch (Exception $e) {
             $msg = 'Error get all resumes : ' . $e->getMessage();
             Log::error($msg);
-            return $this->sendError($msg, ResponseCodeHttp::ERROR_REGISTER);
+            return $this->jsonResponseError($msg, ResponseCodeHttp::ERROR_REGISTER);
         }
     }
 
@@ -70,11 +70,11 @@ class ResumeController extends BaseController
             $resume->save();
 
             $result = new ResumeResource($resume);
-            return $this->sendResponse($result, 'Resume created');
+            return $this->jsonResponseSuccess('Resume created', $result);
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
             Log::error($msg);
-            return $this->sendError($msg, ResponseCodeHttp::ERROR_REGISTER);
+            return $this->jsonResponseError($msg, ResponseCodeHttp::ERROR_REGISTER);
         }
     }
 
@@ -89,9 +89,9 @@ class ResumeController extends BaseController
     {
         $resume = Resume::where('uuid', $uuid)->first();
         if (empty($resume))
-            return $this->sendError('Element not found', ResponseCodeHttp::NOT_FOUND);
+            return $this->jsonResponseError('Element not found', ResponseCodeHttp::NOT_FOUND);
         $result = new ResumeResource($resume);
-        return $this->sendResponse($result, 'Element recept');
+        return $this->jsonResponseSuccess('Element recept', $result);
     }
 
     /**
@@ -107,11 +107,11 @@ class ResumeController extends BaseController
         try {
             $resume->update($request->all());
             $result = new ResumeResource($resume);
-            return $this->sendResponse($result, 'Resume update');
+            return $this->jsonResponseSuccess('Resume update', $result);
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
             Log::error($msg);
-            return $this->sendError($msg, ResponseCodeHttp::ERROR_REGISTER);
+            return $this->jsonResponseError($msg, ResponseCodeHttp::ERROR_REGISTER);
         }
     }
 
@@ -126,8 +126,8 @@ class ResumeController extends BaseController
     {
         $resume = Resume::where('uuid', $uuid)->first();
         if (empty($resume))
-            return $this->sendError('Element not found', ResponseCodeHttp::NOT_FOUND);
+            return $this->jsonResponseError('Element not found', ResponseCodeHttp::NOT_FOUND);
         $resume->delete();
-        return $this->sendResponse([], 'Element delete');
+        return $this->jsonResponseSuccess('Element delete');
     }
 }
