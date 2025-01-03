@@ -111,9 +111,19 @@ class FormationController extends BaseController
 
     /**
      * Remove the specified resource from storage.
+     * 
+     * @param Resume $resume
+     * @param string $uuid
+     * 
+     * @return JsonResponse
      */
-    public function destroy(Formation $formation)
+    public function destroy(Resume $resume, string $uuid): JsonResponse
     {
-        //
+        $formation = $resume->skills()->where('uuid', $uuid)->first();
+        if (empty($formation))
+            return $this->jsonResponseError('Element not found', ResponseCodeHttp::NOT_FOUND);
+
+        $formation->delete();
+        return $this->jsonResponseSuccess('Element delete');
     }
 }

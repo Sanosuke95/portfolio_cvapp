@@ -118,6 +118,12 @@ class SkillController extends BaseController
 
     /**
      * Remove the specified resource from storage.
+     * 
+     * 
+     * @param Resume $resume
+     * @param string $uuid
+     * 
+     * @return JsonResponse
      */
     public function destroy(Resume $resume, string $uuid): JsonResponse
     {
