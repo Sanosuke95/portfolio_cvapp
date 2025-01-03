@@ -95,4 +95,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Skill::class);
     }
+
+    /**
+     * Realtionship with formation
+     *
+     * @return HasMany
+     */
+    public function formations(): HasMany
+    {
+        return $this->hasMany(Formation::class);
+    }
 }

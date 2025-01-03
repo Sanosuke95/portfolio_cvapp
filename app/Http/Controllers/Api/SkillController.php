@@ -3,17 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSkillRequest;
 use App\Http\Requests\UpdateSkillRequest;
-use App\Http\Resources\ResumeResource;
 use App\Http\Resources\SkillResource;
 use App\Models\Resume;
 use App\Models\Skill;
 use Auth;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class SkillController extends BaseController
 {
@@ -60,7 +58,7 @@ class SkillController extends BaseController
      * 
      * @return JsonResponse
      */
-    public function store(Resume $resume, StoreSkillRequest $request)
+    public function store(Resume $resume, StoreSkillRequest $request): JsonResponse
     {
         Log::info("Begin insert");
         try {
@@ -88,7 +86,7 @@ class SkillController extends BaseController
      * @param Resume $resume
      * @param string $uuid
      */
-    public function show(Resume $resume, string $uuid)
+    public function show(Resume $resume, string $uuid): JsonResponse
     {
         $skill = $resume->skills()->where('uuid', $uuid)->first();
         if (empty($skill))
@@ -104,7 +102,7 @@ class SkillController extends BaseController
      * @param Resume $resume
      * @param string $uuid
      */
-    public function update(UpdateSkillRequest $request, Resume $resume, string $uuid)
+    public function update(UpdateSkillRequest $request, Resume $resume, string $uuid): JsonResponse
     {
         try {
             $skill = $resume->skills()->where('uuid', $uuid)->first();
@@ -121,7 +119,7 @@ class SkillController extends BaseController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Resume $resume, string $uuid)
+    public function destroy(Resume $resume, string $uuid): JsonResponse
     {
         $skill = $resume->skills()->where('uuid', $uuid)->first();
         if (empty($skill))

@@ -4,22 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 /**
- * @mixin IdeHelperResume
+ * @mixin IdeHelperFormation
  */
-class Resume extends Model
+class Formation extends Model
 {
 
     /**
      * The all fields for the model
-     *
+     * 
      * @var array<int, string>
      */
     protected $fillable = [
-        'title',
+        'name',
+        'location',
+        'start_date',
+        'end_date',
         'description'
     ];
 
@@ -45,7 +47,6 @@ class Resume extends Model
         return 'uuid';
     }
 
-
     /**
      * Get the user realtion
      */
@@ -55,22 +56,10 @@ class Resume extends Model
     }
 
     /**
-     * Relation by skill
-     *
-     * @return HasMany
+     * Get resume parent for own skill
      */
-    public function skills(): HasMany
+    public function resume(): BelongsTo
     {
-        return $this->hasMany(Skill::class);
-    }
-
-    /**
-     * Relation by formations
-     *
-     * @return HasMany
-     */
-    public function formations(): HasMany
-    {
-        return $this->hasMany(Formation::class);
+        return $this->belongsTo(Resume::class, 'foreign_key', 'resume_id');
     }
 }

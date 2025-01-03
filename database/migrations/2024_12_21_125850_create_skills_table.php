@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid()->unique();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('resume_id');
-            $table->string('name');
+            $table->string('name', 32);
             $table->integer('level');
             $table->timestamps();
 
