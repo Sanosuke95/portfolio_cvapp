@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
-use App\Http\Requests\StoreFormationRequest;
-use App\Http\Requests\UpdateFormationRequest;
-use App\Http\Requests\UpdateResumeRequest;
+use App\Http\Requests\FormationRequest;
 use App\Http\Resources\FormationResource;
 use App\Models\Formation;
 use App\Models\Resume;
@@ -31,6 +29,7 @@ class FormationController extends BaseController
 
     /**
      * Display a listing of the resource.
+     * @param Resume $resume
      * 
      * @return JsonResponse
      */
@@ -42,14 +41,18 @@ class FormationController extends BaseController
         } catch (Exception $e) {
             $msg = 'Error get all resumes : ' . $e->getMessage();
             Log::error($msg);
-            return $this->jsonResponseError($msg, ResponseCodeHttp::ERROR_REGISTER);
+            return $this->jsonResponseError($msg, ResponseCodeHttp::UNPROCESSABLE_ENTITY);
         }
     }
 
     /**
      * Store a newly created resource in storage.
+     * @param Resume $resume
+     * @param FormationRequest $request
+     * 
+     * @return JsonResponse
      */
-    public function store(Resume $resume, StoreFormationRequest $request): JsonResponse
+    public function store(Resume $resume, FormationRequest $request): JsonResponse
     {
         Log::info("Begin insert");
         try {
@@ -65,7 +68,7 @@ class FormationController extends BaseController
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
             Log::error($msg);
-            return $this->jsonResponseError($msg, ResponseCodeHttp::ERROR_REGISTER);
+            return $this->jsonResponseError($msg, ResponseCodeHttp::UNPROCESSABLE_ENTITY);
         }
     }
 
@@ -89,23 +92,24 @@ class FormationController extends BaseController
     /**
      * Update the specified resource in storage.
      * 
-     * @param UpdateResumeRequest $request
+     * @param FormationRequest $request
      * @param Resume $resume
      * @param string $uuid
      * 
      * @return JsonResponse
      */
-    public function update(UpdateFormationRequest $request, Resume $resume, string $uuid): JsonResponse
+    public function update(FormationRequest $request, Resume $resume, string $uuid): JsonResponse
     {
         try {
             $formation = $resume->formations()->where('uuid', $uuid)->first();
             $formation->update($request->all());
+            $formation->save();
             $result = new FormationResource($formation);
             return $this->jsonResponseSuccess('Formation update', $result);
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
             Log::error($msg);
-            return $this->jsonResponseError($msg, ResponseCodeHttp::ERROR_REGISTER);
+            return $this->jsonResponseError($msg, ResponseCodeHttp::UNPROCESSABLE_ENTITY);
         }
     }
 
@@ -119,7 +123,7 @@ class FormationController extends BaseController
      */
     public function destroy(Resume $resume, string $uuid): JsonResponse
     {
-        $formation = $resume->skills()->where('uuid', $uuid)->first();
+        $formation = $resume->formations()->where('uuid', $uuid)->first();
         if (empty($formation))
             return $this->jsonResponseError('Element not found', ResponseCodeHttp::NOT_FOUND);
 

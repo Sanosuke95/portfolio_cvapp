@@ -2,24 +2,15 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class StoreFormationRequest extends FormRequest
+class FormationRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
 
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function store(): array
     {
         return [
             'name' => "required|min:3",
@@ -27,6 +18,22 @@ class StoreFormationRequest extends FormRequest
             'start_date' => "required",
             'end_date' => "required",
             'description' => "required|min:10"
+        ];
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function update(): array
+    {
+        return [
+            'name' => "min:3",
+            'location' => "nullable",
+            'start_date' => "nullable",
+            'end_date' => "nullable",
+            'description' => "min:10"
         ];
     }
 

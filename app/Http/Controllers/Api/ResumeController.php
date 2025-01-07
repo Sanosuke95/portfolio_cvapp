@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
 use App\Enum\Step;
-use App\Http\Requests\StoreResumeRequest;
-use App\Http\Requests\UpdateResumeRequest;
+use App\Http\Requests\ResumeRequest;
 use App\Http\Resources\ResumeResource;
 use App\Models\Resume;
-use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -45,7 +43,7 @@ class ResumeController extends BaseController
         } catch (Exception $e) {
             $msg = 'Error get all resumes : ' . $e->getMessage();
             Log::error($msg);
-            return $this->jsonResponseError($msg, ResponseCodeHttp::ERROR_REGISTER);
+            return $this->jsonResponseError($msg, ResponseCodeHttp::UNPROCESSABLE_ENTITY);
         }
     }
 
@@ -54,9 +52,8 @@ class ResumeController extends BaseController
      * 
      * @return JsonResponse
      */
-    public function store(StoreResumeRequest $request): JsonResponse
+    public function store(ResumeRequest $request): JsonResponse
     {
-
         Log::info("Begin insert");
         try {
             $resume = new Resume($request->all());
@@ -74,7 +71,7 @@ class ResumeController extends BaseController
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
             Log::error($msg);
-            return $this->jsonResponseError($msg, ResponseCodeHttp::ERROR_REGISTER);
+            return $this->jsonResponseError($msg, ResponseCodeHttp::UNPROCESSABLE_ENTITY);
         }
     }
 
@@ -97,12 +94,12 @@ class ResumeController extends BaseController
     /**
      * Update the specified resource in storage.
      * 
-     * @param UpdateResumeRequest $request
+     * @param ResumeRequest $request
      * @param Resume $resume
      * 
      * @return JsonResponse
      */
-    public function update(UpdateResumeRequest $request, Resume $resume): JsonResponse
+    public function update(ResumeRequest $request, Resume $resume): JsonResponse
     {
         try {
             $resume->update($request->all());
@@ -111,7 +108,7 @@ class ResumeController extends BaseController
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
             Log::error($msg);
-            return $this->jsonResponseError($msg, ResponseCodeHttp::ERROR_REGISTER);
+            return $this->jsonResponseError($msg, ResponseCodeHttp::UNPROCESSABLE_ENTITY);
         }
     }
 

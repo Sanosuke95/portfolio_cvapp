@@ -45,7 +45,7 @@ class AuthController extends BaseController
             return $this->jsonResponseSuccess('Success login', $data);
         } else {
             Log::error('Authenticated failed');
-            return $this->jsonResponseError('Authenticated failed', ResponseCodeHttp::ERROR_LOGIN);
+            return $this->jsonResponseError('Authenticated failed', ResponseCodeHttp::UNPROCESSABLE_ENTITY);
         }
     }
 
@@ -77,7 +77,7 @@ class AuthController extends BaseController
             return $this->jsonResponseSuccess('User create.', $data);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return $this->jsonResponseError($e->getMessage(), ResponseCodeHttp::ERROR_REGISTER);
+            return $this->jsonResponseError($e->getMessage(), ResponseCodeHttp::UNPROCESSABLE_ENTITY);
         }
     }
 
