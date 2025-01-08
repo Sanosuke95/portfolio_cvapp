@@ -3,28 +3,25 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
-use App\Enum\Step;
-use App\Http\Requests\ResumeRequest;
-use App\Http\Resources\ResumeResource;
+use App\Http\Requests\FormationRequest;
+use App\Http\Resources\FormationResource;
+use App\Models\Formation;
 use App\Models\Resume;
+use Illuminate\Support\Facades\Auth;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class ResumeController extends BaseController
+class FormationController extends BaseController
 {
-
     /**
      * get current user
-     * 
-     * @var object
+     *
+     * @var object $user
      */
     protected object $user;
 
-    /**
-     * Constructor 
-     */
+
     public function __construct()
     {
         $this->user = Auth::user();
@@ -32,14 +29,15 @@ class ResumeController extends BaseController
 
     /**
      * Display a listing of the resource.
+     * @param Resume $resume
      * 
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Resume $resume): JsonResponse
     {
         try {
-            $resumes = ResumeResource::collection($this->user->resumes)->resolve();
-            return $this->jsonResponseSuccess('List resume', $resumes);
+            $formations = FormationResource::collection($resume->formations)->resolve();
+            return $this->jsonResponseSuccess('Formation list', $formations);
         } catch (Exception $e) {
             $msg = 'Error get all resumes : ' . $e->getMessage();
             Log::error($msg);
@@ -49,25 +47,24 @@ class ResumeController extends BaseController
 
     /**
      * Store a newly created resource in storage.
+     * @param Resume $resume
+     * @param FormationRequest $request
      * 
      * @return JsonResponse
      */
-    public function store(ResumeRequest $request): JsonResponse
+    public function store(Resume $resume, FormationRequest $request): JsonResponse
     {
         Log::info("Begin insert");
         try {
-            $resume = new Resume($request->all());
-            $resume->user_id = $this->user->id;
-            $resume->completed = false;
-
-            if (is_null($resume->step))
-                $resume->step = Step::STEP_SKILLS->value;
+            $formation = new Formation($request->all());
+            $formation->user_id = $this->user->id;
+            $formation->resume_id = $resume->id;
 
             Log::info('Insert data');
-            $resume->save();
+            $formation->save();
 
-            $result = new ResumeResource($resume);
-            return $this->jsonResponseSuccess('Resume created', $result);
+            $result = new FormationResource($formation);
+            return $this->jsonResponseSuccess('Formation created', $result);
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
             Log::error($msg);
@@ -78,33 +75,37 @@ class ResumeController extends BaseController
     /**
      * Display the specified resource.
      * 
+     * @param Resume $resume
      * @param string $uuid
      * 
      * @return JsonResponse
      */
-    public function show(string $uuid): JsonResponse
+    public function show(Resume $resume, string $uuid): JsonResponse
     {
-        $resume = Resume::where('uuid', $uuid)->first();
-        if (empty($resume))
+        $formation = $resume->formations()->where('uuid', $uuid)->first();
+        if (empty($formation))
             return $this->jsonResponseError('Element not found', ResponseCodeHttp::NOT_FOUND);
-        $result = new ResumeResource($resume);
-        return $this->jsonResponseSuccess('Element recept', $result);
+        $result = new FormationResource($formation);
+        return $this->jsonResponseSuccess('Formation selected', $result);
     }
 
     /**
      * Update the specified resource in storage.
      * 
-     * @param ResumeRequest $request
+     * @param FormationRequest $request
      * @param Resume $resume
+     * @param string $uuid
      * 
      * @return JsonResponse
      */
-    public function update(ResumeRequest $request, Resume $resume): JsonResponse
+    public function update(FormationRequest $request, Resume $resume, string $uuid): JsonResponse
     {
         try {
-            $resume->update($request->all());
-            $result = new ResumeResource($resume);
-            return $this->jsonResponseSuccess('Resume update', $result);
+            $formation = $resume->formations()->where('uuid', $uuid)->first();
+            $formation->update($request->all());
+            $formation->save();
+            $result = new FormationResource($formation);
+            return $this->jsonResponseSuccess('Formation update', $result);
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
             Log::error($msg);
@@ -115,16 +116,18 @@ class ResumeController extends BaseController
     /**
      * Remove the specified resource from storage.
      * 
+     * @param Resume $resume
      * @param string $uuid
      * 
      * @return JsonResponse
      */
-    public function destroy(string $uuid): JsonResponse
+    public function destroy(Resume $resume, string $uuid): JsonResponse
     {
-        $resume = Resume::where('uuid', $uuid)->first();
-        if (empty($resume))
+        $formation = $resume->formations()->where('uuid', $uuid)->first();
+        if (empty($formation))
             return $this->jsonResponseError('Element not found', ResponseCodeHttp::NOT_FOUND);
-        $resume->delete();
+
+        $formation->delete();
         return $this->jsonResponseSuccess('Element delete');
     }
 }

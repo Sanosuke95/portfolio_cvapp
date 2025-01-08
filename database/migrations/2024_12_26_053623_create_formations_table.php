@@ -11,17 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('resumes', function (Blueprint $table) {
+        Schema::create('formations', function (Blueprint $table) {
             $table->id();
             $table->uuid()->unique();
             $table->unsignedBigInteger('user_id');
-            $table->string('title', 32);
-            $table->text('description')->nullable();
-            $table->enum('step', ['skills', 'formations', 'jobs', 'hobby']);
-            $table->boolean('completed')->value(false);
+            $table->unsignedBigInteger('resume_id');
+            $table->string('name', 32);
+            $table->string('location', 128);
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->text('description');
+
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('resume_id')->references('id')->on('resumes')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -30,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('resumes');
+        Schema::dropIfExists('formations');
     }
 };

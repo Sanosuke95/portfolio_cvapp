@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateSkillRequest extends FormRequest
+class BaseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,20 +21,27 @@ class UpdateSkillRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'min:2'
-        ];
+        return match ($this->method()) {
+            'POST' => $this->store(),
+            'PUT' => $this->update(),
+            default => $this->store()
+        };
     }
 
+
     /**
-     * All message for error
+     * Function for store element is method is post
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array
      */
-    public function messages()
+    public function store(): array
     {
-        return [
-            'name.min' => 'This name is too short'
-        ];
+        return [];
+    }
+
+
+    public function update(): array
+    {
+        return [];
     }
 }
