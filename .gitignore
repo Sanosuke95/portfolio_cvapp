@@ -70,3 +70,6 @@ sketch
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/laravel,react,visualstudiocode
+package-lock.json
+package-lock.json
+.phpstorm.meta.php
