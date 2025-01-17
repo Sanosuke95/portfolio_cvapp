@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Resume;
+use App\Models\Skill;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -21,5 +22,6 @@ class DatabaseSeeder extends Seeder
             'password' => 'laravel'
         ]);
         Resume::factory()->count(random_int(1, 5))->create();
+        Skill::factory()->count(random_int(10, 20))->create();
     }
 }
