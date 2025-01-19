@@ -29,7 +29,7 @@ class Resume extends Model
      *
      * @return void
      */
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -49,6 +49,8 @@ class Resume extends Model
 
     /**
      * Get the user realtion
+     * 
+     * @return BelongsTo
      */
     public function user(): BelongsTo
     {
