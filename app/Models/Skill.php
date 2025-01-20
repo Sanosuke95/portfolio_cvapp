@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
+
 /**
  * @mixin IdeHelperSkill
  */
@@ -28,7 +29,7 @@ class Skill extends Model
      *
      * @return void
      */
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -48,6 +49,8 @@ class Skill extends Model
 
     /**
      * Get user parent
+     * 
+     * @return BelongsTo
      */
     public function user(): BelongsTo
     {
@@ -57,6 +60,8 @@ class Skill extends Model
 
     /**
      * Get resume parent for own skill
+     * 
+     * @return BelongsTo
      */
     public function resume(): BelongsTo
     {

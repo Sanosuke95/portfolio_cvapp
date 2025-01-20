@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
@@ -11,7 +12,7 @@ use Illuminate\Support\Str;
  */
 class Formation extends Model
 {
-
+    use HasFactory;
     /**
      * The all fields for the model
      * 
@@ -30,7 +31,7 @@ class Formation extends Model
      *
      * @return void
      */
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -49,6 +50,8 @@ class Formation extends Model
 
     /**
      * Get the user realtion
+     * 
+     * @return BelongsTo
      */
     public function user(): BelongsTo
     {
@@ -57,6 +60,8 @@ class Formation extends Model
 
     /**
      * Get resume parent for own skill
+     * 
+     * @return BelongsTo
      */
     public function resume(): BelongsTo
     {

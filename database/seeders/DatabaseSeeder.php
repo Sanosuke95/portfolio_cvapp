@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Formation;
 use App\Models\Resume;
 use App\Models\Skill;
 use App\Models\User;
@@ -23,5 +24,6 @@ class DatabaseSeeder extends Seeder
         ]);
         Resume::factory()->count(random_int(1, 5))->create();
         Skill::factory()->count(random_int(10, 20))->create();
+        Formation::factory()->count(random_int(10, 15))->create();
     }
 }
