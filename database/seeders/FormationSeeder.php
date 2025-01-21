@@ -13,6 +13,6 @@ class FormationSeeder extends Seeder
      */
     public function run(): void
     {
-        Formation::factory()->count(random_int(10, 15))->create();
+        Formation::factory()->count(rand(10, 15))->create();
     }
 }

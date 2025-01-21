@@ -13,6 +13,6 @@ class SkillSeeder extends Seeder
      */
     public function run(): void
     {
-        Skill::factory()->count(random_int(10, 20))->create();
+        Skill::factory()->count(rand(10, 20))->create();
     }
 }

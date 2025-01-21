@@ -41,7 +41,7 @@ class BaseController extends Controller
      * 
      * @return JsonResponse
      */
-    public function jsonResponseError(string $message, ResponseCodeHttp $code = ResponseCodeHttp::NOT_FOUND)
+    public function jsonResponseError(string $message, ResponseCodeHttp $code = ResponseCodeHttp::NOT_FOUND): JsonResponse
     {
         $response = [
             'success' => false,

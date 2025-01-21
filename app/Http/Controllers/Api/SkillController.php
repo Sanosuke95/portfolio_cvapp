@@ -7,9 +7,9 @@ use App\Http\Requests\SkillRequest;
 use App\Http\Resources\SkillResource;
 use App\Models\Resume;
 use App\Models\Skill;
-use Auth;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class SkillController extends BaseController

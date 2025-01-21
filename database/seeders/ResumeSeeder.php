@@ -13,6 +13,6 @@ class ResumeSeeder extends Seeder
      */
     public function run(): void
     {
-        Resume::factory()->count(random_int(1, 5))->create();
+        Resume::factory()->count(rand(1, 5))->create();
     }
 }
