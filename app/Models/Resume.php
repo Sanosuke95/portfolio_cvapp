@@ -76,4 +76,14 @@ class Resume extends Model
     {
         return $this->hasMany(Formation::class);
     }
+
+    /**
+     * Relation by experience
+     *
+     * @return HasMany
+     */
+    public function experiences(): HasMany
+    {
+        return $this->hasMany(Experience::class);
+    }
 }

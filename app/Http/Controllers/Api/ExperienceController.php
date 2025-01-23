@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreExperienceRequest;
-use App\Http\Requests\UpdateExperienceRequest;
+use App\Http\Requests\ExperienceRequest;
 use App\Http\Resources\ExperienceResource;
 use App\Models\Experience;
 use App\Models\Resume;
@@ -53,23 +51,30 @@ class ExperienceController extends BaseController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreExperienceRequest $request)
+    public function store(ExperienceRequest $request)
     {
         //
     }
 
     /**
      * Display the specified resource.
+     * 
+     * @param Resume $resume
+     * @param string $uuid
      */
-    public function show(Experience $experience)
+    public function show(Resume $resume, string $uuid): JsonResponse
     {
-        //
+        $experience = $resume->experiences()->where('uuid', $uuid)->first();
+        if (empty($experience))
+            return $this->jsonResponseError('Element not found', ResponseCodeHttp::NOT_FOUND);
+        $result = new ExperienceResource($experience);
+        return $this->jsonResponseSuccess('Experience selected', $result);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateExperienceRequest $request, Experience $experience)
+    public function update(ExperienceRequest $request, Experience $experience)
     {
         //
     }
