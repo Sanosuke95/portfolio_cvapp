@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\ExperienceController;
 use App\Http\Controllers\Api\FormationController;
 use App\Http\Controllers\Api\ResumeController;
 use App\Http\Controllers\Api\SkillController;
@@ -16,6 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('resumes/{resume:uuid}')->group(function () {
         Route::apiResource('/skills', SkillController::class);
         Route::apiResource('/formations', FormationController::class);
+        Route::apiResource('/experiences', ExperienceController::class);
     })->scopeBindings();
     Route::prefix('user')->group(function () {
         Route::get('/profile', [AuthController::class, 'profile']);
