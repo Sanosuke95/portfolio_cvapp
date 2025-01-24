@@ -50,10 +50,29 @@ class ExperienceController extends BaseController
 
     /**
      * Store a newly created resource in storage.
+     * @param Resume $resume
+     * @param ExperienceRequest
+     * 
+     * @return JsonResponse
      */
-    public function store(ExperienceRequest $request)
+    public function store(Resume $resume, ExperienceRequest $request): JsonResponse
     {
-        //
+        Log::info("Begin insert");
+        try {
+            $experience = new Experience($request->all());
+            $experience->user_id = $this->user->id;
+            $experience->resume_id = $resume->id;
+
+            Log::info('Insert data');
+            $experience->save();
+
+            $result = new ExperienceResource($experience);
+            return $this->jsonResponseSuccess('Experience created', $result);
+        } catch (Exception $e) {
+            $msg = 'Error in insert: ' . $e->getMessage();
+            Log::error($msg);
+            return $this->jsonResponseError($msg, ResponseCodeHttp::UNPROCESSABLE_ENTITY);
+        }
     }
 
     /**
