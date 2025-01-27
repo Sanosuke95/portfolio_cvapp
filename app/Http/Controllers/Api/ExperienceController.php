@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
 use App\Http\Requests\ExperienceRequest;
+use App\Http\Requests\FormationRequest;
 use App\Http\Resources\ExperienceResource;
 use App\Models\Experience;
 use App\Models\Resume;
@@ -92,17 +93,43 @@ class ExperienceController extends BaseController
 
     /**
      * Update the specified resource in storage.
+     * 
+     * @param FormationRequest $request
+     * @param Resume $resume
+     * @param string $uuid
+     * 
+     * @return JsonResponse
      */
-    public function update(ExperienceRequest $request, Experience $experience)
+    public function update(ExperienceRequest $request, Resume $resume, string $uuid): JsonResponse
     {
-        //
+        try {
+            $experience = $resume->experiences()->where('uuid', $uuid)->first();
+            $experience->update($request->all());
+            $experience->save();
+            $result = new ExperienceResource($experience);
+            return $this->jsonResponseSuccess('Experience update', $result);
+        } catch (Exception $e) {
+            $msg = 'Error in insert: ' . $e->getMessage();
+            Log::error($msg);
+            return $this->jsonResponseError($msg, ResponseCodeHttp::UNPROCESSABLE_ENTITY);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
+     * 
+     * @param Resume $resume
+     * @param string $uuid
+     * 
+     * @return JsonResponse
      */
-    public function destroy(Experience $experience)
+    public function destroy(Resume $resume, string $uuid): JsonResponse
     {
-        //
+        $experience = $resume->formations()->where('uuid', $uuid)->first();
+        if (empty($experience))
+            return $this->jsonResponseError('Element not found', ResponseCodeHttp::NOT_FOUND);
+
+        $experience->delete();
+        return $this->jsonResponseSuccess('Element delete');
     }
 }

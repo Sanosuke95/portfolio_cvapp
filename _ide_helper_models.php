@@ -55,6 +55,45 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Resume|null $resume
  * @property-read \App\Models\User|null $user
+ * @method static \Database\Factories\ExperienceFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience whereLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience whereResumeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Experience whereUuid($value)
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperExperience {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $uuid
+ * @property int $user_id
+ * @property int $resume_id
+ * @property string $name
+ * @property string $location
+ * @property string $start_date
+ * @property string $end_date
+ * @property string $description
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Resume|null $resume
+ * @property-read \App\Models\User|null $user
+ * @method static \Database\Factories\FormationFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Formation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Formation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Formation query()
@@ -88,6 +127,8 @@ namespace App\Models{
  * @property int $completed
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Experience> $experiences
+ * @property-read int|null $experiences_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Formation> $formations
  * @property-read int|null $formations_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Skill> $skills
@@ -126,6 +167,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Resume|null $resume
  * @property-read \App\Models\User|null $user
+ * @method static \Database\Factories\SkillFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Skill newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Skill newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Skill query()
