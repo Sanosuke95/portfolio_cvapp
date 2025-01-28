@@ -125,7 +125,7 @@ class ExperienceController extends BaseController
      */
     public function destroy(Resume $resume, string $uuid): JsonResponse
     {
-        $experience = $resume->formations()->where('uuid', $uuid)->first();
+        $experience = $resume->experiences()->where('uuid', $uuid)->first();
         if (empty($experience))
             return $this->jsonResponseError('Element not found', ResponseCodeHttp::NOT_FOUND);
 
