@@ -26,8 +26,11 @@ class ContactController extends BaseController
 
     /**
      * Store a newly created resource in storage.
+     * 
+     * @param StoreContactRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreContactRequest $request)
+    public function store(StoreContactRequest $request): JsonResponse
     {
         Log::info('Begin');
         try {
@@ -51,8 +54,9 @@ class ContactController extends BaseController
      * Show method
      * 
      * @param Contact $contact
+     * @return JsonResponse
      */
-    public function show(Contact $contact)
+    public function show(Contact $contact): JsonResponse
     {
         Log::info('Get element id : ' . $contact->id);
         $result = new ContactResource($contact);
@@ -62,8 +66,11 @@ class ContactController extends BaseController
 
     /**
      * Delete method.
+     * 
+     * @var Contact $contact
+     * @return JsonResponse
      */
-    public function destroy(Contact $contact)
+    public function destroy(Contact $contact): JsonResponse
     {
         Log::info('Delete element id: ' . $contact->id);
         $contact->delete();

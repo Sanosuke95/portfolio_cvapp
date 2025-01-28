@@ -87,7 +87,7 @@ class AuthController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function profile(Request $request)
+    public function profile(Request $request): JsonResponse
     {
         $user = new UserResource($request->user());
         Log::info('User info');

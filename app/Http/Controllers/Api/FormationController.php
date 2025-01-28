@@ -22,6 +22,9 @@ class FormationController extends BaseController
     protected object $user;
 
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->user = Auth::user();

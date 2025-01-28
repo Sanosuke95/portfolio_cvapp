@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 /**
- * @mixin IdeHelperFormation
+ * @mixin IdeHelperExperience
  */
-class Formation extends Model
+class Experience extends Model
 {
     use HasFactory;
     /**

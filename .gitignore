@@ -23,8 +23,6 @@ yarn.lock
 node_modules/
 npm-debug.log
 yarn-error.log
-_ide_helper_models.php
-_ide_helper.php
 
 storage/*.key
 storage/pail
@@ -70,3 +68,5 @@ sketch
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/laravel,react,visualstudiocode
+package-lock.json
+.phpstorm.meta.php

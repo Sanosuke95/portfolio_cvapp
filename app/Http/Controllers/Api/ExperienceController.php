@@ -3,24 +3,24 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enum\ResponseCodeHttp;
-use App\Http\Requests\SkillRequest;
-use App\Http\Resources\SkillResource;
+use App\Http\Requests\ExperienceRequest;
+use App\Http\Requests\FormationRequest;
+use App\Http\Resources\ExperienceResource;
+use App\Models\Experience;
 use App\Models\Resume;
-use App\Models\Skill;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class SkillController extends BaseController
+class ExperienceController extends BaseController
 {
-
     /**
      * get current user
      *
      * @var object $user
      */
-    protected $user;
+    protected object $user;
 
 
     /**
@@ -31,17 +31,17 @@ class SkillController extends BaseController
         $this->user = Auth::user();
     }
 
-
     /**
      * Display a listing of the resource.
+     * @param Resume $resume
      * 
      * @return JsonResponse
      */
     public function index(Resume $resume): JsonResponse
     {
         try {
-            $skills = SkillResource::collection($resume->skills)->resolve();
-            return $this->jsonResponseSuccess('Skill list', $skills);
+            $experiences = ExperienceResource::collection($resume->experiences)->resolve();
+            return $this->jsonResponseSuccess('Experience list', $experiences);
         } catch (Exception $e) {
             $msg = 'Error get all resumes : ' . $e->getMessage();
             Log::error($msg);
@@ -51,27 +51,24 @@ class SkillController extends BaseController
 
     /**
      * Store a newly created resource in storage.
-     * 
-     * @param SkillRequest $request
      * @param Resume $resume
+     * @param ExperienceRequest
      * 
      * @return JsonResponse
      */
-    public function store(Resume $resume, SkillRequest $request): JsonResponse
+    public function store(Resume $resume, ExperienceRequest $request): JsonResponse
     {
         Log::info("Begin insert");
         try {
-            $skill = new Skill($request->all());
-            $skill->user_id = $this->user->id;
-            $skill->resume_id = $resume->id;
-            if (is_null($skill->level))
-                $skill->level = 1;
+            $experience = new Experience($request->all());
+            $experience->user_id = $this->user->id;
+            $experience->resume_id = $resume->id;
 
             Log::info('Insert data');
-            $skill->save();
+            $experience->save();
 
-            $result = new SkillResource($skill);
-            return $this->jsonResponseSuccess('Skill created', $result);
+            $result = new ExperienceResource($experience);
+            return $this->jsonResponseSuccess('Experience created', $result);
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
             Log::error($msg);
@@ -87,27 +84,30 @@ class SkillController extends BaseController
      */
     public function show(Resume $resume, string $uuid): JsonResponse
     {
-        $skill = $resume->skills()->where('uuid', $uuid)->first();
-        if (empty($skill))
+        $experience = $resume->experiences()->where('uuid', $uuid)->first();
+        if (empty($experience))
             return $this->jsonResponseError('Element not found', ResponseCodeHttp::NOT_FOUND);
-        $result = new SkillResource($skill);
-        return $this->jsonResponseSuccess('Skill selected', $result);
+        $result = new ExperienceResource($experience);
+        return $this->jsonResponseSuccess('Experience selected', $result);
     }
 
     /**
      * Update the specified resource in storage.
      * 
-     * @param SkillRequest $request
+     * @param FormationRequest $request
      * @param Resume $resume
      * @param string $uuid
+     * 
+     * @return JsonResponse
      */
-    public function update(SkillRequest $request, Resume $resume, string $uuid): JsonResponse
+    public function update(ExperienceRequest $request, Resume $resume, string $uuid): JsonResponse
     {
         try {
-            $skill = $resume->skills()->where('uuid', $uuid)->first();
-            $skill->update($request->all());
-            $result = new SkillResource($skill);
-            return $this->jsonResponseSuccess('Skill update', $result);
+            $experience = $resume->experiences()->where('uuid', $uuid)->first();
+            $experience->update($request->all());
+            $experience->save();
+            $result = new ExperienceResource($experience);
+            return $this->jsonResponseSuccess('Experience update', $result);
         } catch (Exception $e) {
             $msg = 'Error in insert: ' . $e->getMessage();
             Log::error($msg);
@@ -118,7 +118,6 @@ class SkillController extends BaseController
     /**
      * Remove the specified resource from storage.
      * 
-     * 
      * @param Resume $resume
      * @param string $uuid
      * 
@@ -126,11 +125,11 @@ class SkillController extends BaseController
      */
     public function destroy(Resume $resume, string $uuid): JsonResponse
     {
-        $skill = $resume->skills()->where('uuid', $uuid)->first();
-        if (empty($skill))
+        $experience = $resume->experiences()->where('uuid', $uuid)->first();
+        if (empty($experience))
             return $this->jsonResponseError('Element not found', ResponseCodeHttp::NOT_FOUND);
 
-        $skill->delete();
+        $experience->delete();
         return $this->jsonResponseSuccess('Element delete');
     }
 }

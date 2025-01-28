@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +13,7 @@ use Illuminate\Support\Str;
  */
 class Resume extends Model
 {
-
+    use HasFactory;
     /**
      * The all fields for the model
      *
@@ -28,7 +29,7 @@ class Resume extends Model
      *
      * @return void
      */
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -48,6 +49,8 @@ class Resume extends Model
 
     /**
      * Get the user realtion
+     * 
+     * @return BelongsTo
      */
     public function user(): BelongsTo
     {
@@ -72,5 +75,15 @@ class Resume extends Model
     public function formations(): HasMany
     {
         return $this->hasMany(Formation::class);
+    }
+
+    /**
+     * Relation by experience
+     *
+     * @return HasMany
+     */
+    public function experiences(): HasMany
+    {
+        return $this->hasMany(Experience::class);
     }
 }
