@@ -5,10 +5,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "./components/Button";
 
 function Hello() {
+    const handleSubmit = () => {
+        console.log("Hello");
+    };
     return (
         <>
             <h1>Hello World!</h1>
-            <Button>Hello</Button>
+            <Button onClick={handleSubmit} className={"btn btn-primary"}>
+                Hello
+            </Button>
         </>
     );
 }
