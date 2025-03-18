@@ -1,11 +1,12 @@
 import axios from "axios";
 
-const instance = axios.create({
+const apiClient = axios.create({
     baseURL: "http://127.0.0.1:8000/api",
     headers: {
         Authorization: "Bearer ",
         "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
     },
 });
 
-export default instance;
+export default apiClient;
